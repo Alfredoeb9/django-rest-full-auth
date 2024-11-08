@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from rest_framework.generics import CreateAPIView
+
+from accounts.utils import send_otp_email
 from .serializers import UserRegisterSerializer
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
@@ -16,7 +18,10 @@ class RegisterView(CreateAPIView):
         if serializer.is_valid():
             serializer.save()
             user = serializer.data
-            # send email function user['email]
+
+            # In production user celery to send email to delay the response
+            send_otp_email(user['email'])
+
             return Response({
                 'data': user,
                 'message': 'User has been created successfully'
