@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from rest_framework.generics import CreateAPIView, GenericAPIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 
 from accounts.utils import send_otp_email
-from .serializers import UserRegisterSerializer, LoginSerializer, SetNewPasswordSerializer, PasswordResetRequestSerializer
+from .serializers import UserRegisterSerializer, LoginSerializer, SetNewPasswordSerializer, PasswordResetRequestSerializer, LogoutUserSerializer
 from .models import OneTimePassword, User
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import smart_str, DjangoUnicodeDecodeError
@@ -96,5 +97,18 @@ class SetNewPassword(GenericAPIView):
 
         if serializer.is_valid(raise_exception=True):
             return Response({'message': 'Password has been reset successfully'}, status=HTTP_200_OK)
+        
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+    
+class LogoutView(GenericAPIView):
+    serializer_class = LogoutUserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response({'message': 'User has been logged out'}, status=HTTP_204_NO_CONTENT)
         
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
