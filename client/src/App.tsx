@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Profile from "./components/Profile";
 import VerifyEmail from "./pages/VerifyEmail";
 import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import "./App.css";
 
 function App() {
@@ -15,7 +16,11 @@ function App() {
           <Route path={"/login"} element={<Login />} />
           <Route path={"/dashboard"} element={<Profile />} />
           <Route path={"/otp/verify"} element={<VerifyEmail />} />
-          <Route path={"/forgot_password"} element={<ForgotPassword />} />
+          <Route path={"/forgot-password"} element={<ForgotPassword />} />
+          <Route
+            path={"/password-reset-confirm/:uid/:token"}
+            element={<ResetPassword />}
+          />
         </Routes>
       </Router>
     </>
