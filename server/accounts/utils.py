@@ -34,7 +34,7 @@ def send_normal_email(data):
         subject=data['email_subject'],
         body=data['email_body'],
         from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[data['to']]
+        to=[data['to_email']]
     )
 
     email.send(fail_silently=True)
