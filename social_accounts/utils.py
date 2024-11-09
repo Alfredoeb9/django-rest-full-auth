@@ -38,7 +38,7 @@ def register_social_user(provider, email, first_name, last_name):
         if provider != user.auth_provider:
             raise AuthenticationFailed(f"Please continue your login using {user.auth_provider}")
 
-        login_social_user(user.email, settings.SOCIAL_AUTH_PASSWORD)
+        return login_social_user(user.email, settings.SOCIAL_AUTH_PASSWORD)
     
     new_user = User.objects.create(
         email=email,
@@ -51,5 +51,7 @@ def register_social_user(provider, email, first_name, last_name):
 
     new_user.save()
 
-    login_social_user(new_user.email, settings.SOCIAL_AUTH_PASSWORD)
+    result = login_social_user(new_user.email, settings.SOCIAL_AUTH_PASSWORD)
+    
+    return result
 
